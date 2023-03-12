@@ -32,11 +32,9 @@ export default function SeatsPage() {
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
+                {seats.seats.map((s) => (
+                    <SeatItem key={s.id}>{s.name}</SeatItem>
+                ))}
             </SeatsContainer>
 
             <CaptionContainer>
