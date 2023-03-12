@@ -1,79 +1,109 @@
 import { useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 import axios from "axios"
 import { useState } from "react"
 
 export default function SeatsPage() {
-    const { idSessao } = useParams()
-    const [seats, setSeats] = useState(undefined)
+  const [name, setName] = useState("")
+  const [cpf, setCpf] = useState("")
+  const navigate = useNavigate()
 
-    useEffect(() => {
-        const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
-        const promise = axios.get(url)
-    
-        promise.then((res) => {
-          setSeats(res.data)
-          console.log(res.data)
-        })
-    
-        promise.catch((err) => {
-          console.log(err.response.data)
-        })
-      }, [])
-    
-      if (seats === undefined) {
-        return <div>Carregando...</div>
-      }
+  const { idSessao } = useParams()
+  const [seats, setSeats] = useState(undefined)
+
+  
+  useEffect(() => {
+    const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
+    const promise = axios.get(url)
+
+    promise.then((res) => {
+      setSeats(res.data)
+      console.log(res.data)
+    })
+
+    promise.catch((err) => {
+      console.log(err.response.data)
+    })
+  }, [])
+
+  if (seats === undefined) {
+    return <div>Carregando...</div>
+  }
+
+  function form(e) {
+    e.preventDefault()
+    const urlPost = "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many"
+    const formulario = { name, cpf }
+
+    const promise = axios.post(urlPost, formulario)
+    promise.then(res => navigate("/sucesso"))
+    promise.catch(err => console.log(err.response.data))
+  }
 
 
-    return (
-        <PageContainer>
-            Selecione o(s) assento(s)
+  return (
+    <PageContainer>
+      Selecione o(s) assento(s)
 
-            <SeatsContainer>
-                {seats.seats.map((s) => (
-                    <SeatItem key={s.id}>{s.name}</SeatItem>
-                ))}
-            </SeatsContainer>
+      <SeatsContainer>
+        {seats.seats.map((s) => (
+          <SeatItem key={s.id}>{s.name}</SeatItem>
+        ))}
+      </SeatsContainer>
 
-            <CaptionContainer>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Selecionado
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Disponível
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Indisponível
-                </CaptionItem>
-            </CaptionContainer>
+      <CaptionContainer>
+        <CaptionItem>
+          <CaptionCircle />
+          Selecionado
+        </CaptionItem>
+        <CaptionItem>
+          <CaptionCircle />
+          Disponível
+        </CaptionItem>
+        <CaptionItem>
+          <CaptionCircle />
+          Indisponível
+        </CaptionItem>
+      </CaptionContainer>
 
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+      <FormContainer>
+        <form onSubmit={form}>
+          <label htmlFor="name" >Nome do Comprador: </label>
+          <input
+            id="name"
+            placeholder="Digite seu nome..."
+            required
+            value={name}
+            onChange={e => setName(e.target.value)}
+          />
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+          <label htmlFor="cpf"> CPF do Comprador: </label>
+          <input
+            id="cpf"
+            placeholder="Digite seu CPF..."
+            required
+            value={cpf}
+            onChange={e => setCpf(e.target.value)}
+          />
+          <Link to={"/sucesso"}>
+          <button type="submit">Reservar Assento(s)</button>
+          </Link>
+        </form>
+      </FormContainer>
 
-                <button>Reservar Assento(s)</button>
-            </FormContainer>
+      <FooterContainer>
+        <div>
+          <img src={seats.movie.posterURL} alt={seats.title} />
+        </div>
+        <div>
+          <p>{seats.movie.title}</p>
+          <p>{seats.day.weekday} - {seats.day.date}</p>
+        </div>
+      </FooterContainer>
 
-            <FooterContainer>
-                <div>
-                    <img src={seats.movie.posterURL} alt={seats.title} />
-                </div>
-                <div>
-                    <p>{seats.movie.title}</p>
-                    <p>{seats.day.weekday} - {seats.day.date}</p>
-                </div>
-            </FooterContainer>
-
-        </PageContainer>
-    )
+    </PageContainer>
+  )
 }
 
 const PageContainer = styled.div`
