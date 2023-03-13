@@ -21,7 +21,7 @@ export const SuccessPage = ({ status, setStatus }) => {
 
       <TextContainer data-test="seats-info">
         <strong><p>Ingressos</p></strong>
-        {status.seatSelected.map((s) =>
+        {status.selected.map((s) =>
           <p key={s}>Assento {s}</p>
         )}
       </TextContainer>

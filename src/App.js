@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { useState } from "react"
 import HomePage from "./pages/HomePage/HomePage"
-import SeatsPage from "./pages/SeatsPage/SeatsPage"
-import SessionsPage from "./pages/SessionsPage/SessionsPage"
+import { SeatsPage } from "./pages/SeatsPage/SeatsPage"
+import { SessionsPage } from "./pages/SessionsPage/SessionsPage"
 import { SuccessPage } from "./pages/SuccessPage/SuccessPage"
 import { Navbar } from "./components/Navbar"
 
@@ -11,7 +11,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-     <Navbar title={CINEFLEX}/>
+     <Navbar title="CINEFLEX"/>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/sessoes/:idFilme" element={< SessionsPage />} />
