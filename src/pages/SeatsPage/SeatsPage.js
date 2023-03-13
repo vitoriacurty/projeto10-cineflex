@@ -5,6 +5,8 @@ import axios from "axios"
 import { useState } from "react"
 
 export default function SeatsPage() {
+  const [selected, setSelected] = useState([])
+  const [reserved, setReserved] = useState([])
   const [name, setName] = useState("")
   const [cpf, setCpf] = useState("")
   const navigate = useNavigate()
@@ -31,6 +33,12 @@ export default function SeatsPage() {
     return <div>Carregando...</div>
   }
 
+  function seatState(id, name, isAvailable){
+    if(!isAvailable) {
+      alert("Esse assento não está disponível.")
+    }
+  }
+
   function form(e) {
     e.preventDefault()
     const urlPost = "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many"
@@ -48,7 +56,7 @@ export default function SeatsPage() {
 
       <SeatsContainer>
         {seats.seats.map((s) => (
-          <SeatItem key={s.id}>{s.name}</SeatItem>
+          <SeatItem data-test="seat" key={s.id}>{s.name}</SeatItem>
         ))}
       </SeatsContainer>
 
@@ -70,7 +78,7 @@ export default function SeatsPage() {
       <FormContainer>
         <form onSubmit={form}>
           <label htmlFor="name" >Nome do Comprador: </label>
-          <input
+          <input data-test="client-name"
             id="name"
             placeholder="Digite seu nome..."
             required
@@ -79,7 +87,7 @@ export default function SeatsPage() {
           />
 
           <label htmlFor="cpf"> CPF do Comprador: </label>
-          <input
+          <input data-test="client-cpf"
             id="cpf"
             placeholder="Digite seu CPF..."
             required
@@ -87,12 +95,12 @@ export default function SeatsPage() {
             onChange={e => setCpf(e.target.value)}
           />
           <Link to={"/sucesso"}>
-          <button type="submit">Reservar Assento(s)</button>
+          <button data-test="book-seat-btn" type="submit">Reservar Assento(s)</button>
           </Link>
         </form>
       </FormContainer>
 
-      <FooterContainer>
+      <FooterContainer data-test="footer">
         <div>
           <img src={seats.movie.posterURL} alt={seats.title} />
         </div>
