@@ -148,6 +148,9 @@ const FormContainer = styled.div`
     input {
         width: calc(100vw - 60px);
     }
+    a {
+      text-decoration: none;
+    }
 `
 const CaptionContainer = styled.div`
     display: flex;
