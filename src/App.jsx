@@ -1,10 +1,12 @@
 import styled from "styled-components"
+import axios from "axios"
 import HomePage from "./pages/HomePage/HomePage"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"
 import SessionsPage from "./pages/SessionsPage/SessionsPage"
 import SuccessPage from "./pages/SuccessPage/SuccessPage"
 
 export default function App() {
+    axios.defaults.headers.common['Authorization'] = 'QoMHCmAWaMAAwNkO6sokJWv1'
     return (
         <>
            <NavContainer>CINEFLEX</NavContainer>
