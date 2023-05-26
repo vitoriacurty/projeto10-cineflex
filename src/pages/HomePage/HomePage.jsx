@@ -2,37 +2,44 @@ import { useEffect } from "react"
 import styled from "styled-components"
 import axios from "axios"
 import { useState } from "react"
+import { Link } from "react-router-dom"
 
 export default function HomePage() {
 
-    const [movies, setMovies] = useState([])
+  const [movies, setMovies] = useState([])
 
-    useEffect(() => {
-        const url = "https://mock-api.driven.com.br/api/v8/cineflex/movies"
-        const promise = axios.get(url)
+  useEffect(() => {
+    const url = "https://mock-api.driven.com.br/api/v8/cineflex/movies"
+    const promise = axios.get(url)
 
-        promise.then((res) => {
-            setMovies(res.data)
-            console.log(res.data)
-        })
-        promise.catch((err) => {
-            console.log(err.response.data)
-        })
-    }, [])
-    return (
-        <PageContainer>
-            Selecione o filme
+    promise.then((res) => {
+      setMovies(res.data)
+      console.log(res.data)
+    })
+    promise.catch((err) => {
+      console.log(err.response.data)
+    })
+  }, [])
 
-            <ListContainer>
-                {movies.map((mov) => (
-                    <MovieContainer key={mov.id}>
-                    <img src={mov.posterURL} alt={mov.title}/>
-                </MovieContainer>
-                ))}
-            </ListContainer>
+  if (movies === undefined) {
+    return <div>Carregando...</div>
+  }
+  return (
+    <PageContainer>
+      Selecione o filme
 
-        </PageContainer>
-    )
+      <ListContainer>
+        {movies.map((mov) => (
+          <MovieContainer key={mov.id}>
+            <Link to={`/sessoes/${mov.id}`}>
+              <img src={mov.posterURL} alt={mov.title} />
+            </Link>
+          </MovieContainer>
+        ))}
+      </ListContainer>
+
+    </PageContainer>
+  )
 }
 
 const PageContainer = styled.div`
