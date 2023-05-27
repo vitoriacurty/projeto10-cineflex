@@ -1,70 +1,74 @@
+import axios from "axios"
+import { useEffect } from "react"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import Footer from "../../components/Footer"
 
 export default function SeatsPage() {
-    const { idSessao } = useParams()
-    const [seats, setSeats] = useState([])
+  const { idSessao } = useParams()
+  const [seats, setSeats] = useState(undefined)
 
-    useEffect(() => {
-        const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
-        const promise = axios.get(url)
+  useEffect(() => {
+    const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
+    const promise = axios.get(url)
 
-        promise.then((res) => {
-            setSeats(res.data)
-            console.log(res.data)
-        })
-        promise.catch((err) => {
-            console.log(err.response.data)
-        })
-    }, [])
+    promise.then((res) => {
+      setSeats(res.data)
+      console.log(res.data)
+    })
+    promise.catch((err) => {
+      console.log(err.response.data)
+    })
+  }, [])
 
-    if (seats === undefined) {
-        return <div>Carregando...</div>
-    }
+  if (seats === undefined) {
+    return <div>Carregando...</div>
+  }
 
-    return (
-        <PageContainer>
-            Selecione o(s) assento(s)
-
-
-            <SeatsContainer>
-                {seats.map((s) => (
-                    <SeatItem>01</SeatItem>
-                ))}
-            </SeatsContainer>
-
-            <CaptionContainer>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Selecionado
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Disponível
-                </CaptionItem>
-                <CaptionItem>
-                    <CaptionCircle />
-                    Indisponível
-                </CaptionItem>
-            </CaptionContainer>
-
-            <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
-
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
-
-                <button>Reservar Assento(s)</button>
-            </FormContainer>
-
-            <Footer />
+  return (
+    <PageContainer>
+      Selecione o(s) assento(s)
 
 
-        </PageContainer>
-    )
+      <SeatsContainer>
+        {seats.seats.map((s) => (
+          <SeatItem key={s.id}>{s.name}</SeatItem>
+        ))}
+      </SeatsContainer>
+
+      <CaptionContainer>
+        <CaptionItem>
+          <CaptionCircle />
+          Selecionado
+        </CaptionItem>
+        <CaptionItem>
+          <CaptionCircle />
+          Disponível
+        </CaptionItem>
+        <CaptionItem>
+          <CaptionCircle />
+          Indisponível
+        </CaptionItem>
+      </CaptionContainer>
+
+      <FormContainer>
+        Nome do Comprador:
+        <input placeholder="Digite seu nome..." />
+
+        CPF do Comprador:
+        <input placeholder="Digite seu CPF..." />
+
+        <button>Reservar Assento(s)</button>
+      </FormContainer>
+
+      <Footer posterURL={seats.movie.posterURL} title={seats.movie.title}>
+        <p>{seats.movie.title}</p>
+        <p>{seats.day.weekday} - {seats.name}</p>
+      </Footer>
+
+    </PageContainer>
+  )
 }
 
 const PageContainer = styled.div`
