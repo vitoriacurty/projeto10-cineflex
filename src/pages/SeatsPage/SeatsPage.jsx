@@ -8,6 +8,8 @@ import Footer from "../../components/Footer"
 export default function SeatsPage() {
   const { idSessao } = useParams()
   const [seats, setSeats] = useState(undefined)
+  const [selectedSeats, setSelectedSeats] = useState([])
+
 
   useEffect(() => {
     const url = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`
@@ -26,28 +28,46 @@ export default function SeatsPage() {
     return <div>Carregando...</div>
   }
 
+  function seatState(seat) {
+    if (!seat.isAvailable) {
+      alert("Esse assento não está disponível");
+    } else {
+      const isSelected = selectedSeats.some((s) => s.id === seat.id)
+      const updatedSeats = isSelected
+        ? selectedSeats.filter((s) => s.id !== seat.id)
+        : [...selectedSeats, seat]
+
+      setSelectedSeats(updatedSeats)
+    }
+  }
+
   return (
     <PageContainer>
       Selecione o(s) assento(s)
 
 
       <SeatsContainer>
-        {seats.seats.map((s) => (
-          <SeatItem key={s.id}>{s.name}</SeatItem>
+        {seats.seats.map((st) => (
+          <SeatItem
+            key={st.id}
+            onClick={() => seatState(st)}
+            seatcolor={!st.isAvailable ? "indisponivel" : selectedSeats.some((s) => s.id === st.id) ? "selecionado" : "disponivel"}>
+            {st.name}
+          </SeatItem>
         ))}
       </SeatsContainer>
 
       <CaptionContainer>
         <CaptionItem>
-          <CaptionCircle />
+          <CaptionCircle seatcolor={"selecionado"} />
           Selecionado
         </CaptionItem>
         <CaptionItem>
-          <CaptionCircle />
+          <CaptionCircle seatcolor={"disponivel"} />
           Disponível
         </CaptionItem>
         <CaptionItem>
-          <CaptionCircle />
+          <CaptionCircle seatcolor={"indisponivel"} />
           Indisponível
         </CaptionItem>
       </CaptionContainer>
@@ -114,8 +134,32 @@ const CaptionContainer = styled.div`
     margin: 20px;
 `
 const CaptionCircle = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+    border: 1px solid ${(props) => {
+    if (props.seatcolor === "disponivel") {
+      return "#7B8B99"
+    } else {
+      if (props.seatcolor === "selecionado") {
+        return "#0E7D71"
+      } else {
+        if (props.seatcolor === "indisponivel") {
+          return "#F7C52B"
+        }
+      }
+    }
+  }};
+    background-color: ${(props) => {
+    if (props.seatcolor === "disponivel") {
+      return "#C3CFD9"
+    } else {
+      if (props.seatcolor === "selecionado") {
+        return "#1AAE9E"
+      } else {
+        if (props.seatcolor === "indisponivel") {
+          return "#FBE192"
+        }
+      }
+    }
+  }};
     height: 25px;
     width: 25px;
     border-radius: 25px;
@@ -131,8 +175,32 @@ const CaptionItem = styled.div`
     font-size: 12px;
 `
 const SeatItem = styled.div`
-    border: 1px solid blue;         // Essa cor deve mudar
-    background-color: lightblue;    // Essa cor deve mudar
+     border: 1px solid ${(props) => {
+    if (props.seatcolor === "disponivel") {
+      return "#7B8B99"
+    } else {
+      if (props.seatcolor === "selecionado") {
+        return "#0E7D71"
+      } else {
+        if (props.seatcolor === "indisponivel") {
+          return "#F7C52B"
+        }
+      }
+    }
+  }};
+    background-color: ${(props) => {
+    if (props.seatcolor === "disponivel") {
+      return "#C3CFD9"
+    } else {
+      if (props.seatcolor === "selecionado") {
+        return "#1AAE9E"
+      } else {
+        if (props.seatcolor === "indisponivel") {
+          return "#FBE192"
+        }
+      }
+    }
+  }};
     height: 25px;
     width: 25px;
     border-radius: 25px;
