@@ -49,6 +49,7 @@ export default function SeatsPage() {
       <SeatsContainer>
         {seats.seats.map((st) => (
           <SeatItem
+            data-test="seat"
             key={st.id}
             onClick={() => seatState(st)}
             seatcolor={!st.isAvailable ? "indisponivel" : selectedSeats.some((s) => s.id === st.id) ? "selecionado" : "disponivel"}>

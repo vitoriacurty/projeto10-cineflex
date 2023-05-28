@@ -30,15 +30,17 @@ export default function SessionsPage() {
       Selecione o horário
       <div>
         {sessions.days.map((s) => (
-          <SessionContainer key={s.id}>
+          <SessionContainer key={s.id} data-test="movie-day">
             {s.weekday} - {s.date}
+
             <ButtonsContainer>
               {s.showtimes.map((show) => 
               <Link key={show.id} to={`/assentos/${show.id}`}>
-              <button>{show.name}</button>
+              <button data-test="showtime">{show.name}</button>
               </Link>
               )}
             </ButtonsContainer>
+
           </SessionContainer>
         ))}
 
