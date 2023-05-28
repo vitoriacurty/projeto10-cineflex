@@ -1,14 +1,18 @@
 import axios from "axios"
 import { useEffect } from "react"
 import { useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 import Footer from "../../components/Footer"
 
-export default function SeatsPage() {
+export default function SeatsPage({ status, setStatus }) {
   const { idSessao } = useParams()
   const [seats, setSeats] = useState(undefined)
   const [selectedSeats, setSelectedSeats] = useState([])
+  const [reserved, setReserved] = useState([])
+  const [name, setName] = useState("")
+  const [cpf, setCpf] = useState("")
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -39,6 +43,33 @@ export default function SeatsPage() {
 
       setSelectedSeats(updatedSeats)
     }
+  }
+
+  function form(e) {
+    e.preventDefault()
+    const urlPost = "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many"
+    const ids = {reserved}
+    const formulario = { ids, name, cpf }
+
+    const promise = axios.post(urlPost, formulario)
+
+    promise.then((res) => {
+      const info = {
+        movie: seats.movie.title,
+        date: seats.day.date,
+        hour: seats.name,
+        buyer: form.name,
+        cpf: form.cpf,
+        seats: selectedSeats.map((s) => s.name)
+      }
+      console.log(res.data)
+      setStatus(info)
+      navigate("/sucesso")
+    })
+
+    promise.catch((err) => {
+      console.log(err.renponse.data)
+    })
   }
 
   return (
@@ -73,14 +104,26 @@ export default function SeatsPage() {
         </CaptionItem>
       </CaptionContainer>
 
-      <FormContainer>
-        Nome do Comprador:
-        <input placeholder="Digite seu nome..." />
+      <FormContainer onSubmit={form}>
+        <label htmlFor="name">Nome do Comprador:</label>
+        <input data-test="client-name" 
+        id="name" 
+        placeholder="Digite seu nome..." 
+        required
+        value={name}
+        onChange={e => setName(e.target.value)}
+        />
 
-        CPF do Comprador:
-        <input placeholder="Digite seu CPF..." />
+        <label htmlFor="cpf">CPF do Comprador:</label>
+        <input data-test="client-cpf"
+        id="cpf" 
+        placeholder="Digite seu CPF..." 
+        required
+        value={cpf}
+        onChange={e => setCpf(e.target.value)}
+        />
 
-        <button>Reservar Assento(s)</button>
+        <button data-test="book-seat-btn" type="submit">Reservar Assento(s)</button>
       </FormContainer>
 
       <Footer posterURL={seats.movie.posterURL} title={seats.movie.title}>
@@ -113,7 +156,7 @@ const SeatsContainer = styled.div`
     justify-content: center;
     margin-top: 20px;
 `
-const FormContainer = styled.div`
+const FormContainer = styled.form`
     width: calc(100vw - 40px); 
     display: flex;
     flex-direction: column;
