@@ -60,7 +60,7 @@ export default function SeatsPage({ status, setStatus }) {
         buyer: {
           name,
           cpf,
-          ids,
+          ids: selectedSeats.map((s) => s.name),
         },
         movie: seats.movie.title,
         date: seats.day.date,

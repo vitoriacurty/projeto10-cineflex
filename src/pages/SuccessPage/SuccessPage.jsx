@@ -17,14 +17,12 @@ export default function SuccessPage({ status, setStatus, ids }) {
             <TextContainer data-test="movie-info">
                 <strong><p>Filme e sessão</p></strong>
                 <p>{status.movie}</p>
-                <p>{status.date} - {status.name}</p>
+                <p>{status.date} - {status.hour}</p>
             </TextContainer>
 
             <TextContainer data-test="seats-info">
                 <strong><p>Ingressos</p></strong>
-                {ids && ids.map((s) => <p>Assento {s}</p>)}
-                
-                
+                {ids && ids.map((s => <p>Assento {s}</p>))}
             </TextContainer>
 
             <TextContainer data-test="client-info">
