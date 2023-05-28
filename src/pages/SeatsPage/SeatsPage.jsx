@@ -9,7 +9,7 @@ export default function SeatsPage({ status, setStatus }) {
   const { idSessao } = useParams()
   const [seats, setSeats] = useState(undefined)
   const [selectedSeats, setSelectedSeats] = useState([])
-  const [reserved, setReserved] = useState([])
+  // const [reserved, setReserved] = useState([])
   const [name, setName] = useState("")
   const [cpf, setCpf] = useState("")
   const navigate = useNavigate()
@@ -34,7 +34,7 @@ export default function SeatsPage({ status, setStatus }) {
 
   function seatState(seat) {
     if (!seat.isAvailable) {
-      alert("Esse assento não está disponível");
+      alert("Esse assento não está disponível")
     } else {
       const isSelected = selectedSeats.some((s) => s.id === seat.id)
       const updatedSeats = isSelected
@@ -48,19 +48,23 @@ export default function SeatsPage({ status, setStatus }) {
   function form(e) {
     e.preventDefault()
     const urlPost = "https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many"
-    const ids = {reserved}
+    const ids = selectedSeats.map((s) => s.id)
+   
     const formulario = { ids, name, cpf }
+    console.log(formulario)
 
     const promise = axios.post(urlPost, formulario)
 
     promise.then((res) => {
       const info = {
+        buyer: {
+          name,
+          cpf,
+          ids,
+        },
         movie: seats.movie.title,
         date: seats.day.date,
         hour: seats.name,
-        buyer: form.name,
-        cpf: form.cpf,
-        seats: selectedSeats.map((s) => s.name)
       }
       console.log(res.data)
       setStatus(info)

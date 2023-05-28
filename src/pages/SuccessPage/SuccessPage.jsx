@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 
-export default function SuccessPage({ status, setStatus }) {
+export default function SuccessPage({ status, setStatus, ids }) {
     const navigate = useNavigate()
 
     function backToHome() {
         setStatus(undefined)
         navigate("/")
     }
+    console.log(status)
 
     return (
         <PageContainer>
@@ -21,15 +22,15 @@ export default function SuccessPage({ status, setStatus }) {
 
             <TextContainer data-test="seats-info">
                 <strong><p>Ingressos</p></strong>
-                {seats.map((s) => <p>Assento {s}</p>)}
+                {ids && ids.map((s) => <p>Assento {s}</p>)}
                 
                 
             </TextContainer>
 
             <TextContainer data-test="client-info">
                 <strong><p>Comprador</p></strong>
-                <p>Nome: {status.name}</p>
-                <p>CPF: {status.cpf}</p>
+                <p>Nome: {status.buyer.name}</p>
+                <p>CPF: {status.buyer.cpf}</p>
             </TextContainer>
 
             <button data-test="go-home-btn" onClick={backToHome}>Voltar para Home</button>
